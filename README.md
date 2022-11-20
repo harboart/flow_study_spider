@@ -23,3 +23,9 @@ In the flow_trans_data table, the contract address is obtained every hour and in
 ## get_contract.py
 
 Get unprocessed contract_address from flow_contract_address table, insert into flow_code table
+
+## parse_flow_code.py
+获得合约代码的类型和分类
+
+## contract_struct_parser2
+分析代码结构，结构在代码中的位置
