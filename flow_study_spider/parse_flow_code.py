@@ -96,4 +96,4 @@ pub contract DisruptArt: NonFungibleToken {
     # cate_type= get_code_type(contract_code)
     # print(cate_type)
     # get_code_category()
-    get_code_related(contract_code)
+    # get_code_related(contract_code)
