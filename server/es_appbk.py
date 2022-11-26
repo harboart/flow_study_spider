@@ -5,6 +5,8 @@ import json
 import sql_appbk
 import time
 import platform
+import re
+
 
 #es 搜索
 #文档https://elasticsearch-py.readthedocs.io/en/7.9.0/
@@ -69,11 +71,21 @@ def search_es(query="NFT", start=0, limit=10):
 
     return num, result
 
+"""
+功能：获取相关代码，contract_name，contract_address作为代码唯一标识，或取合约代码，提取代码关键词，搜索相关代码
+输入：contract_name,合约名称
+        contract_address，合约地址
+输出:相关代码
+"""
+def similar():
+    pass
+
 
 if __name__ == '__main__':
+    pass
     # query = "NFT"
     # num, result = search_es(query)
-    print(num)
+    # print(num)
     # print(json.dumps(result))
 
 

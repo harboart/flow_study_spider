@@ -28,4 +28,5 @@ Get unprocessed contract_address from flow_contract_address table, insert into f
 获得合约代码的类型和分类
 
 ## contract_struct_parser2
-分析代码结构，结构在代码中的位置
+分析代码结构，获取结构在代码中的位置
+需要调用go服务

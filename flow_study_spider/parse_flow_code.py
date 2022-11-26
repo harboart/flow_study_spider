@@ -1,16 +1,19 @@
 import json
 import re
 from flow_study_spider import sql_appbk
-"""
-功能：根据代码contract_code，判断代码的contact_type类型,contract_category分类。
-"""
+
+
+
+
+
+
 
 
 
 """
 功能；根据代码判断标签
 输入：contract_code 
-输出：标签 contract_type
+返回：标签 contract_type
 """
 def get_code_type(contract_code):
     p = re.compile('pub contract.*|access\(all\) contract.*')  # 引用的正则
@@ -28,11 +31,11 @@ def get_code_type(contract_code):
 """
 功能；根据代码判断标签
 输入：contract_code
-输出：标签 contract_category
+返回：标签 contract_category
 """
 def get_code_category():
     sql = """
-    select contract_name,id from flow_code where contract_type = "contract" and contract_category is null limit 1
+    select contract_name,id from flow_code where contract_type = "contract" and contract_category is null 
     """
     ret = sql_appbk.mysql_com(sql)
     # print(contract_name)
@@ -53,9 +56,6 @@ def get_code_category():
         update flow_code set contract_category = '{}' where id={}
         """.format(code_category,id)
         result = sql_appbk.mysql_com(sql_update)
-
-
-
 
 
 """
@@ -79,24 +79,21 @@ def process():
 
 if __name__ == '__main__':
     contract_code = """
-with a central ledger smart contract. To send tokens to another user,
-a user would simply withdraw the tokens from their Vault, then call
-the deposit function on another user's Vault to complete the transfer.
+// Version         : 0.0.8
 
-*/
-/// FungibleToken
-// Follow the "Hello, World!" tutorial to learn more: https://developers.flow.com/cadence/tutorial/02-hello-world
-pub contract HelloWorld {
-    // Declare a public field of type String.
-    //
-    // All fields must be initialized in the init() function.
-    pub let greeting: String
+// Blockchain      : Flow www.onFlow.org
 
-    /// TokensInitialized
-    ///
+import NonFungibleToken from 0x1d7e57aa55817448
+
+import MetadataViews from 0x1d7e57aa55817448
+
+import FungibleToken from 0xf233dcee88fe0abe
+
+pub contract DisruptArt: NonFungibleToken {
     """
     # process()
 
     # cate_type= get_code_type(contract_code)
     # print(cate_type)
-    get_code_category()
+    # get_code_category()
+    get_code_related(contract_code)

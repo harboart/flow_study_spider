@@ -26,7 +26,7 @@ if node in online_nodes: #线上内网
     g_db_name = "nft" #数据库名
     g_db_port = 3306
 else: #外网
-    g_db_host = "47.242.206.108" #线上机器
+    g_db_host = "8.218.127.18" #线上机器
     g_db_user = "root"
     g_db_pw = "Rootali123!@#"
     g_db_name = "nft" #数据库名
