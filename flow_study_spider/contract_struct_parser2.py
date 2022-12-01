@@ -4,13 +4,6 @@ from flow_study_spider import sql_appbk
 import requests
 
 
-"""
-功能；通过go服务解析代码，得到代码结构，获取代码相关合约，脚本，交易，并存入数据库。
-输入：
-返回：
-"""
-def get_code_related(contract_code):
-    pass
 
 
 #

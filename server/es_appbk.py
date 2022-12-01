@@ -14,16 +14,24 @@ import re
 
 #数据库
 #带选择数据库功能
+from server.get_keywords import get_keywords
+
 node = platform.node()
 online_nodes = ["n1.appbk.com","iZj6ccepuz1ebnidz3cwfxZ"] #线上服务器列表
 if node in online_nodes: #线上内网
-    ES = Elasticsearch(["http://localhost:9200"])
+    ES = Elasticsearch(["http://localhost:9230"])
 else:
-    ES = Elasticsearch(["http://47.242.206.108:9200"])
+    ES = Elasticsearch(["http://8.218.127.18:9230"])
+    # ES = Elasticsearch(["http://47.242.206.108:9200"])
+#     9230 port
 
 ES_INDEX = "flow_code"
 
 
+
+
+#start = (pagenum-1)*pagesize
+#limit = pagesize
 # 向es插入一条数据,data格式为dict
 # 使用时修改es地址，索引名
 def search_es(query="NFT", start=0, limit=10):
@@ -68,25 +76,81 @@ def search_es(query="NFT", start=0, limit=10):
         data["contract_code"] = contract_code
 
         result.append(data)
+    result_dict={}
+    result_dict["num"] = num
+    result_dict["result"] = result
+    return result_dict
 
-    return num, result
+
 
 """
 功能：获取相关代码，contract_name，contract_address作为代码唯一标识，或取合约代码，提取代码关键词，搜索相关代码
-输入：contract_name,合约名称
-        contract_address，合约地址
+输入： 
 输出:相关代码
 """
-def similar():
-    pass
+def get_similar(query, start=0, limit=10):
+
+    dsl = {"query": {
+                    "query_string": {
+                        "fields": ["contract_name", "contract_code"],
+                        "query": query
+                    }
+            },
+            "highlight": {
+                "fields": {
+                    "contract_name": {},
+                    "contract_code": {}
+                }
+            },
+           "from": start,
+           "size": limit,
+           }
+    res = ES.search(index=ES_INDEX, body=dsl)
+
+    result = res['hits']['hits']
+    # num = res['hits']['total']['value'] #搜索结果数
+    print(result)
+    return result
+
+
+"""
+功能：获取相关代码
+输入：
+返回:
+"""
+def get_similar_code(contract_address,contract_name):
+    sql = """
+    select * from flow_code where contract_address = '{}' AND contract_name ='{}' limit 1
+    """.format(contract_address,contract_name)
+    result = sql_appbk.mysql_com(sql)
+
+    contract_code = result[0]["contract_code"]
+    word_list =get_keywords(contract_code)
+    result = {}
+    if len(word_list)>50:
+        query = word_list[0:50]
+        query_a = " ".join(query)
+        es_result = get_similar(query_a)
+        # print("=======")
+        # print(es_result)
+    else:
+        query_a = " ".join(word_list)
+        es_result = get_similar(query_a)
+    result["data"] = es_result
+    return json.dumps(result)
 
 
 if __name__ == '__main__':
-    pass
     # query = "NFT"
-    # num, result = search_es(query)
-    # print(num)
-    # print(json.dumps(result))
-
+    # result_dict = search_es(query)
+    # print(result_dict)
+    # print(json.dumps(result_dict))
+    # search_es()
+    # get_similar("NFT")
+    # get_similar("import FungibleToken // {")
+    contract_name = "NWayUtilityCoin"
+    contract_address = "0x011b6f1425389550"
+    sc = get_similar_code(contract_address,contract_name)
+    print(sc)
 
 
