@@ -7,13 +7,10 @@ from flow_study_spider import sql_appbk
 
 
 
-
-
-
 """
 功能；根据代码判断标签
 输入：contract_code 
-返回：标签 contract_type
+返回：标签 contract_type (interface,contract,transaction)
 """
 def get_code_type(contract_code):
     p = re.compile('pub contract.*|access\(all\) contract.*')  # 引用的正则
@@ -31,7 +28,7 @@ def get_code_type(contract_code):
 """
 功能；根据代码判断标签
 输入：contract_code
-返回：标签 contract_category
+返回：标签 contract_category(nft,token,other)
 """
 def get_code_category():
     sql = """

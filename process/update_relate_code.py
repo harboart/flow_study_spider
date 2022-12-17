@@ -74,39 +74,39 @@ def proceess():
 
         # 1
         # 2
-def cc():
-    sql = """
-    select * from flow_code where is_relate = 0 limit 1 
-    """
-    result = sql_appbk.mysql_com(sql)
-
-    for item in result:
-        c_name = item["contract_name"]
-        c_address = item["contract_address"]
-        c_code  = item["contract_code"]
-        c_id  = item["id"]
-        code_relation_l = code_relation.get_code_related(c_code)
-        data_list  = []
-        for i in code_relation_l:
-            i_name = i["contract_name"]
-            i_ad = i["contract_address"]
-
-            contract_related = {}
-            contract_related["contract_name"] = c_name
-            contract_related["contract_address"] = c_address
-            contract_related["related_contract_name"] =  i_name
-            contract_related["related_contract_address"] = i_ad
-            contract_related["fetch_time"] = time.strftime("%Y-%m-%d %H:%M:%S")
-            data_list.append(contract_related)
-        print(data_list)
-
-        sql_appbk.insert_data_list(data_list,"contract_relation")
-
-        update_sql = """
-        update flow_code set is_relate = 1 where id = {}
-        """.format(c_id)
-        sql_appbk.mysql_com(update_sql)
-    return 0
+# def cc():
+#     sql = """
+#     select * from flow_code where is_relate = 0 limit 1
+#     """
+#     result = sql_appbk.mysql_com(sql)
+#
+#     for item in result:
+#         c_name = item["contract_name"]
+#         c_address = item["contract_address"]
+#         c_code  = item["contract_code"]
+#         c_id  = item["id"]
+#         code_relation_l = code_relation.get_code_related(c_code)
+#         data_list  = []
+#         for i in code_relation_l:
+#             i_name = i["contract_name"]
+#             i_ad = i["contract_address"]
+#
+#             contract_related = {}
+#             contract_related["contract_name"] = c_name
+#             contract_related["contract_address"] = c_address
+#             contract_related["related_contract_name"] =  i_name
+#             contract_related["related_contract_address"] = i_ad
+#             contract_related["fetch_time"] = time.strftime("%Y-%m-%d %H:%M:%S")
+#             data_list.append(contract_related)
+#         print(data_list)
+#
+#         sql_appbk.insert_data_list(data_list,"contract_relation")
+#
+#         update_sql = """
+#         update flow_code set is_relate = 1 where id = {}
+#         """.format(c_id)
+#         sql_appbk.mysql_com(update_sql)
+#     return 0
 
 if __name__ == '__main__':
     update_relate_code()

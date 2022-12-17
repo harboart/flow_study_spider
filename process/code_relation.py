@@ -50,12 +50,12 @@ def get_code_related(contract_code):
 """
 def get_code_relate_transaction():
     # jia 状态为
-    # sql ="""
-    # select * from flow_code where is_trans = 0 limit 1
-    # """
     sql ="""
-select * from flow_code where is_trans = 0 and  contract_address = '0x097bafa4e0b48eef'
-"""
+    select * from flow_code where is_trans = 0 
+    """
+#     sql ="""
+# select * from flow_code where is_trans = 0 and  contract_address = '0x097bafa4e0b48eef'
+# """
 
     reslut = sql_appbk.mysql_com(sql)  #待处理 contract_code
     for item in reslut:     # 需要处理目标合约代码，合约地址

@@ -146,6 +146,7 @@ if __name__ == '__main__':
     # print(result_dict)
     # print(json.dumps(result_dict))
     # search_es()
+
     # get_similar("NFT")
     # get_similar("import FungibleToken // {")
     contract_name = "NWayUtilityCoin"

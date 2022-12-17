@@ -82,7 +82,7 @@ def transaction(contract_address,contract_name):
     """.format(contract_address,contract_name)
     result = sql_appbk.mysql_com(sql)
 
-    return json.dumps(result[0])
+    return json.dumps(result)
 
 
 
@@ -151,9 +151,9 @@ if __name__ == '__main__':
     # contract_name = "JoyrideAccounts"
     # contract_address = "0xecfad18ba9582d4f"
     # con = code(contract_address,contract_name)
-    # con = code_structure(contract_address,contract_name)
+    con = code_structure(contract_address,contract_name)
     # con = transaction(contract_address,contract_name)
-    con = playground(contract_address,contract_name)
+    # con = playground(contract_address,contract_name)
     # con = code_info(contract_address,contract_name)
     print(con)
     # get_similar_code(contract_address,contract_name)
