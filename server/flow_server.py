@@ -83,13 +83,18 @@ class Similar:
         contract_address = param.contract_address
         contract_name = param.contract_name
 
-        result= es_appbk.get_similar_code(contract_address,contract_name)
-        final_result = {
-            "status":0,
-            "msg":"success",
-            "results":result
-        }
-
+        result_dict = es_appbk.get_similar_code(contract_address,contract_name)
+        if result_dict:
+            final_result = {
+                "status":0,
+                "msg":"success",
+                "results":result_dict
+            }
+        else:
+            final_result = {
+                "status":200,
+                "msg":"fail"
+            }
         return json.dumps(final_result)
 
 class Code:
