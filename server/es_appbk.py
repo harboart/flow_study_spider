@@ -1,20 +1,16 @@
-import sys
-from elasticsearch import Elasticsearch
-import datetime
 import json
-import sql_appbk
-import time
 import platform
-import re
 
+from elasticsearch import Elasticsearch
 
-#es 搜索
-#文档https://elasticsearch-py.readthedocs.io/en/7.9.0/
-#pip3 install elasticsearch==7.9.0
+import sql_appbk
+# 数据库
+# 带选择数据库功能
+from get_keywords import get_keywords
 
-#数据库
-#带选择数据库功能
-from server.get_keywords import get_keywords
+# es 搜索
+# 文档https://elasticsearch-py.readthedocs.io/en/7.9.0/
+# pip3 install elasticsearch==7.9.0
 
 node = platform.node()
 online_nodes = ["n1.appbk.com","iZj6ccepuz1ebnidz3cwfxZ"] #线上服务器列表
@@ -27,34 +23,54 @@ else:
 
 ES_INDEX = "flow_code"
 
-
-
-
 #start = (pagenum-1)*pagesize
 #limit = pagesize
 # 向es插入一条数据,data格式为dict
 # 使用时修改es地址，索引名
-def search_es(query="NFT", start=0, limit=10):
+def search_es(query, start, limit, contract_type, contract_category):
+# def search_es(query, start, limit,contract_type, contract_category):
+    # dsl = {"query": {
+    #                 "query_string": {
+    #                     "fields": ["contract_name", "contract_code"],
+    #                     "query": query
+    #                 }
+    #         },
+    #  "()"
+    # query = "(contract_name:("+query+"))OR(contract_code:("+query+"))"
+    # contract_category = None
+    if contract_type and contract_category:
+        query = "(contract_name:("+query+"))OR(contract_code:("+query+"))AND(contract_type:("+contract_type+"))AND(contract_category:("+contract_category+"))"
+    elif contract_category and contract_type is None:
+        query = "(contract_name:("+query+"))OR(contract_code:("+query+"))AND(contract_category:("+contract_category+"))"
+    elif contract_type and contract_category is None:
+        query = "(contract_name:("+query+"))OR(contract_code:("+query+"))AND(contract_type:("+contract_type+"))"
+    else:
+        query = "(contract_name:("+query+"))OR(contract_code:("+query+"))"
+    # query = "(contract_name:("+query+"))OR(contract_code:("+query+"))"
+    # query = "(contract_name:("+query+"))OR(contract_code:("+query+"))AND(contract_type:("+contract_type+"))"
+    # print("321321"+query)
     dsl = {"query": {
-                    "query_string": {
-                        "fields": ["contract_name", "contract_code"],
-                        "query": query
-                    }
-            },
-            "highlight": {
-                "fields": {
-                    "contract_name": {},
-                    "contract_code": {}
-                }
-            },
-           "from": start,
-           "size": limit,
+               "query_string": {
+                   # "fields": ["contract_name", "contract_code"],
+                   "query": query
+               }
+       },
+       "highlight": {
+           "fields": {
+               "contract_name": {},
+               "contract_code": {}
            }
+       },
+      "from": start,
+      "size": limit
+      }
+
     res = ES.search(index=ES_INDEX, body=dsl)
-    #print(json.dumps(res))
+    # print('es 搜索出的数据'+json.dumps(res))
 
     result = []
     num = res['hits']['total']['value'] #搜索结果数
+    took_time = res['took'] # 搜索使用时间
 
     for item in res['hits']['hits']:
         score = item["_score"] #文档得分
@@ -79,6 +95,7 @@ def search_es(query="NFT", start=0, limit=10):
     result_dict={}
     result_dict["num"] = num
     result_dict["result"] = result
+    result_dict["took_time"] = took_time
     return result_dict
 
 
@@ -88,7 +105,7 @@ def search_es(query="NFT", start=0, limit=10):
 输入： 
 输出:相关代码
 """
-def get_similar(query, start=0, limit=10):
+def get_similar(query, start=1, limit=10):
 
     dsl = {"query": {
                     "query_string": {
@@ -109,7 +126,7 @@ def get_similar(query, start=0, limit=10):
 
     result = res['hits']['hits']
     # num = res['hits']['total']['value'] #搜索结果数
-    print(result)
+    # print(result)
     return result
 
 
@@ -137,21 +154,26 @@ def get_similar_code(contract_address,contract_name):
         query_a = " ".join(word_list)
         es_result = get_similar(query_a)
     result["data"] = es_result
-    return json.dumps(result)
+    # return json.dumps(result)
+    return result
 
 
 if __name__ == '__main__':
-    # query = "NFT"
-    # result_dict = search_es(query)
-    # print(result_dict)
-    # print(json.dumps(result_dict))
+    contract_type = None
+    # contract_type = "contract"
+    contract_category = "token"
+    query = "NFTStorefrontInitialized"
+    # query = "nft"
+    result_dict = search_es(query,1, 2, contract_type,contract_category)
+    print(result_dict)
+    print(json.dumps(result_dict))
     # search_es()
 
     # get_similar("NFT")
     # get_similar("import FungibleToken // {")
-    contract_name = "NWayUtilityCoin"
-    contract_address = "0x011b6f1425389550"
-    sc = get_similar_code(contract_address,contract_name)
-    print(sc)
+    # contract_name = "NWayUtilityCoin"
+    # contract_address = "0x011b6f1425389550"
+    # sc = get_similar_code(contract_address,contract_name)
+    # print(sc)
 
 

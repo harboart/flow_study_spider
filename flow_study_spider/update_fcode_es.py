@@ -11,7 +11,8 @@ import time
 # 向es插入一条数据,data格式为dict
 # 使用时修改es地址，索引名
 def insert_es(data):
-    es = Elasticsearch(["http://127.0.0.1:9200"])
+    # es = Elasticsearch(["http://127.0.0.1:9200"])
+    es = Elasticsearch(["http://8.218.127.18:9230"])
     res = es.index(index="flow_code", body=data, request_timeout=30)
     # print(res['result'])
     return res

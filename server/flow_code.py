@@ -1,9 +1,8 @@
 import json
-import time
-from datetime import datetime, timedelta
-import sql_appbk
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
+import sql_appbk
 
 """
 功能：获得代码内容
@@ -17,8 +16,8 @@ def code(contract_address,contract_name):
     SELECT * FROM flow_code WHERE contract_address = '{}' AND contract_name = '{}'
     """.format(contract_address,contract_name)
     result = sql_appbk.mysql_com(sql)
-    return json.dumps(result[0])
-
+    # return json.dumps(result[0])
+    return result[0]
 
 """
 功能：获取代码结构
@@ -36,14 +35,15 @@ def code_structure(contract_address,contract_name):
     result = sql_appbk.mysql_com(sql)
     result_dict = {}
     result_dict["data"]=result
-    return json.dumps(result_dict)
+    # return json.dumps(result_dict)
+    return result_dict
 
 """
 功能：获得代码相关合约
 输入：contract_address,合约地址
 输入：contract_name,合约名称
 返回: related_contract_name，相关合约的名称
-返回: related_contract_address，相关合约的地址
+返回: related_contract_address，相关合约的地址    
 """
 def contracts(contract_address,contract_name):
     sql = """
@@ -58,7 +58,8 @@ def contracts(contract_address,contract_name):
         search_dict["related_contract_address"] = item["related_contract_address"]
         result_list.append(search_dict)
     result_dict["data"] = result_list
-    return json.dumps(result_dict)
+    # return json.dumps(result_dict)
+    return result_dict
 
 """
 功能：获得代码相关脚本,flow_code_relate_transaction
@@ -81,8 +82,10 @@ def transaction(contract_address,contract_name):
     select * from flow_code_relate_transaction where  contract_address = '{}' AND contract_name ='{}'
     """.format(contract_address,contract_name)
     result = sql_appbk.mysql_com(sql)
-
-    return json.dumps(result)
+    result_dict = {}
+    result_dict["data"] = result
+    return result_dict
+    # return json.dumps(result)
 
 
 
@@ -124,7 +127,8 @@ def code_info(contract_address,contract_name):
     result_dict["contract_name"] = result[0]["contract_name"]
     result_dict["call_in_month"] = call_in[0]["call_in_num"]
 
-    return json.dumps(result_dict)
+    # return json.dumps(result_dict)
+    return result_dict
 
 
 
@@ -139,21 +143,33 @@ def playground(contract_address,contract_name):
     select * from playground where contract_address = '{}' AND contract_name ='{}'
     """.format(contract_address,contract_name)
     result = sql_appbk.mysql_com(sql)
-    return json.dumps(result[0])
+    if result:
+        return result[0]
+    else:
+        return result
+    # return json.dumps(result[0])
 
 
 
 if __name__ == '__main__':
-    contract_name = "NWayUtilityCoin"
-    contract_address = "0x011b6f1425389550"
+    # contract_name = "NWayUtilityCoin"
+    # contract_address = "0x011b6f1425389550"
+
+
+    # con = code(contract_address,contract_name)
+    # con = code_structure(contract_address,contract_name)
+
     # contract_name = "CharityNFT"
     # contract_address = "0x097bafa4e0b48eef"
+    # con = contracts(contract_address,contract_name)
+    # con = transaction(contract_address,contract_name)
+
+
     # contract_name = "JoyrideAccounts"
     # contract_address = "0xecfad18ba9582d4f"
-    # con = code(contract_address,contract_name)
-    con = code_structure(contract_address,contract_name)
-    # con = transaction(contract_address,contract_name)
-    # con = playground(contract_address,contract_name)
+    contract_name = "NWayUtilityCoin"
+    contract_address = "0x011b6f1425389550"
+    con = playground(contract_address,contract_name)
     # con = code_info(contract_address,contract_name)
     print(con)
     # get_similar_code(contract_address,contract_name)

@@ -6,8 +6,6 @@
 # File Name: index.py
 # Description:
 ######################################################################
-import json
-import sql_appbk
 import string
 string.punctuation
 """
