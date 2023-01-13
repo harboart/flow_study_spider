@@ -67,10 +67,7 @@ class Search:
         else:
             final_result = {
                 "status":200,
-                "msg":"fail",
-                "num":result_dict['num'],
-                "results":result_dict['result'],
-                "took_time":result_dict['took_time']
+                "msg":"fail"
             }
         return json.dumps(final_result)
 
