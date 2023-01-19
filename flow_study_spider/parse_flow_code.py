@@ -8,7 +8,7 @@ from flow_study_spider import sql_appbk
 
 
 """
-功能；根据代码判断标签
+功能；根据代码判断标签contract_type
 输入：contract_code 
 返回：标签 contract_type (interface,contract,transaction)
 """

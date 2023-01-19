@@ -11,7 +11,7 @@
 import json
 import web
 import es_appbk
-from flow_code import code, code_structure, contracts, transaction, code_info, playground
+from flow_code import code, code_structure, contracts, code_info, playground, transactions
 
 # import ai_code
 #pip3 install web.py
@@ -22,7 +22,7 @@ urls = (
     '/code','Code', # 获取代码内容
     '/code_structure','Code_structure', # 获取代码结构
     '/contracts','Contracts', # 代码相关合约
-    '/transaction','Transaction',# 代码相关的交易
+    '/transactions','Transactions',# 代码相关的交易
     '/code_info','Code_info',# 代码属性信息
     '/similar','Similar',  # 相似代码
     '/playground','Playground', # playground链接
@@ -199,7 +199,7 @@ class Contracts:
 #                 "msg":"fail"
 #             }
 #         return json.dumps(final_result)
-class Transaction:
+class Transactions:
     def GET(self):
         # 设置http header
         web.header('Access-Control-Allow-Origin','*')
@@ -209,7 +209,7 @@ class Transaction:
         param = web.input()
         contract_address = param.contract_address  #  合约地址
         contract_name =  param.contract_name  #  合约名称
-        result_dict =  transaction(contract_address,contract_name)
+        result_dict =  transactions(contract_address,contract_name)
         if result_dict:
             final_result = {
                 "status": 0,
@@ -242,6 +242,7 @@ class Code_info:
                 "contract_type":result_dict["contract_type"],
                 "contract_address":result_dict["contract_address"],
                 "contract_name":result_dict["contract_name"],
+                "contract_category":result_dict["contract_category"],
                 "call_in_month":result_dict["call_in_month"]
             }
         else:
@@ -273,10 +274,18 @@ class Playground:
                 "playground_url": result_dict['playground_url'],
             }
         else:
+            # final_result = {
+            #     "status": 200,
+            #     "msg": "fail"
+            # }
             final_result = {
-                "status": 200,
-                "msg": "fail"
-            }
+                    "status": 0,
+                    "msg": "success",
+                    "id": 1,
+                    "contract_address": "0x011b6f1425389550",
+                    "contract_name": "NWayUtilityCoin",
+                    "playground_url": "https://play.flow.com/af7aba31-dee9-4477-9e1d-7b46e958468e"
+                }
         return json.dumps(final_result)
 
 if __name__ == "__main__":

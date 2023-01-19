@@ -77,7 +77,7 @@ def scripts():
 返回: relate_transaction_name，相关交易的名称
 返回: relate_transaction_address，相关交易的地址
 """
-def transaction(contract_address,contract_name):
+def transactions(contract_address,contract_name):
     sql = """
     select * from flow_code_relate_transaction where  contract_address = '{}' AND contract_name ='{}'
     """.format(contract_address,contract_name)
@@ -125,6 +125,7 @@ def code_info(contract_address,contract_name):
     result_dict["contract_type"] = result[0]["contract_type"]
     result_dict["contract_address"] =result[0]["contract_address"]
     result_dict["contract_name"] = result[0]["contract_name"]
+    result_dict["contract_category"] = result[0]["contract_category"]
     result_dict["call_in_month"] = call_in[0]["call_in_num"]
 
     # return json.dumps(result_dict)
@@ -169,7 +170,7 @@ if __name__ == '__main__':
     # contract_address = "0xecfad18ba9582d4f"
     contract_name = "NWayUtilityCoin"
     contract_address = "0x011b6f1425389550"
-    con = playground(contract_address,contract_name)
-    # con = code_info(contract_address,contract_name)
+    # con = playground(contract_address,contract_name)
+    con = code_info(contract_address,contract_name)
     print(con)
     # get_similar_code(contract_address,contract_name)
