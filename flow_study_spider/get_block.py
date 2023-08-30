@@ -22,16 +22,16 @@ async def get_block_height():
         # block信息插入数据库
         parent_id_hex = latest_block.parent_id.hex()
         data = {
-            "block_id" : latest_block.id.hex(),
-            "signatures" : latest_block.signatures[0].hex(),
-            "parent_id" : parent_id_hex,
-            "height" : latest_block.height,
-            "fetch_time" : time.strftime("%Y-%m-%d %H:%M:%S",time.localtime()),
-            "timestamp" : latest_block.timestamp,
+            "block_id": latest_block.id.hex(),
+            "signatures": latest_block.signatures[0].hex(),
+            "parent_id": parent_id_hex,
+            "height": latest_block.height,
+            "fetch_time": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
+            "timestamp": latest_block.timestamp,
         }
         # block_list.append(data)
         # sql_appbk.insert_update_data(data,"flow_block")
-        ret = sql_appbk.insert_data(data,"flow_block")
+        ret = sql_appbk.insert_data(data, "flow_block")
 
         return height
 
@@ -48,8 +48,8 @@ def process_sub():
 def  process():
     # while True:
     #     height = asyncio.run(get_block_height())
-        # print(height)
-        # time.sleep(0.5)
+    # print(height)
+    # time.sleep(0.5)
     l = task.LoopingCall(process_sub)
     l.start(0.5)  # call every STEP_S seconds
     reactor.run()
